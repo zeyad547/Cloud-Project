@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId         String   @unique // Clerk's user ID for linking
+  name            String?  // Name can be kept for application-specific purposes
+  username        String?  @unique
+  bio             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  posts         Post[]
+  comments      Comment[]
+}
+
+model Post {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  content            String?
+  title              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  clerkUserId        String   // Reference to User.clerkId
+  likedIds           String[] @db.ObjectId
+  image              String?
+
+  user User @relation(fields: [clerkUserId], references: [clerkId], onDelete: Cascade)
+
+  comments          Comment[]
+}
+
+model Comment {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  content            String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  clerkUserId        String   // Reference to User.clerkId
+  postId             String   @db.ObjectId
+
+  user User @relation(fields: [clerkUserId], references: [clerkId], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
