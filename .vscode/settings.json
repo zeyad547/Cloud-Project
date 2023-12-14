@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/1ddb85c4-c257-431e-9dc4-1da7e775e047/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/carhub",
+    "appService.deploySubpath": "."
+}
